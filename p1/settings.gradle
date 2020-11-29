@@ -1,0 +1,7 @@
+include ':androidEngine'
+include ':DesktopEngine'
+include ':OffTheLineLogic'
+include ':androidgame'
+include ':Engine'
+include ':desktopGame'
+rootProject.name = "p1"
