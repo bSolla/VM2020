@@ -5,6 +5,7 @@ dependencies {
     implementation project(path: ':OffTheLineLogic')
     implementation project(path: ':Engine')
     implementation project(path: ':DesktopEngine')
+    implementation project(path: ':GeneralLogic')
 }
 
 sourceCompatibility = "1.7"

@@ -46,13 +46,6 @@ public class Graphics extends AbstractGraphics {
 
     }
 
-    /**
-     * Pinta ....
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     */
     @Override
     public void drawLine(float x1, float y1, float x2, float y2) {
         g2D.setColor(currentColor);
