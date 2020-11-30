@@ -5,6 +5,7 @@
       <module name="DesktopEngine" target="1.7" />
       <module name="desktopGame" target="1.7" />
       <module name="Engine" target="1.7" />
+      <module name="GeneralLogic" target="1.7" />
       <module name="OffTheLineLogic" target="1.7" />
     </bytecodeTargetLevel>
   </component>

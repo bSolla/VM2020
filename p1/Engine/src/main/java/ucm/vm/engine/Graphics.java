@@ -1,5 +1,7 @@
 package ucm.vm.engine;
 
+import ucm.vm.generallogic.Logic;
+
 public interface Graphics {
     //region METODOS
     /**
@@ -26,5 +28,7 @@ public interface Graphics {
 
     void setWidth(int w);
     void setHeight(int h);
+
+    void setLogic(Logic logic);
     //endregion
 }

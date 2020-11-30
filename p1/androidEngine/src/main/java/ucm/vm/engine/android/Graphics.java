@@ -1,11 +1,20 @@
 package ucm.vm.engine.android;
 import android.graphics.Color;
+import android.view.View;
 
 import ucm.vm.engine.AbstractGraphics;
 
 public class Graphics extends AbstractGraphics {
-    int bakgroundColor = Color.rgb(0, 0,0);
+    int backgroundColor = Color.rgb(0, 0,0);
     int playerColor = Color.rgb(0,136, 255);
+
+    @Override
+    public void init(int width, int height, String windowName) {
+        setWidth(width);
+        setHeight(height);
+
+        //view = new View(this);
+    }
 
     @Override
     public void drawLine(float x1, float y1, float x2, float y2) {
@@ -28,23 +37,7 @@ public class Graphics extends AbstractGraphics {
     }
 
     @Override
-    public void init(int width, int height, String windowName) {
-
-    }
-
-    @Override
     public void run() {
 
-    }
-
-
-    @Override
-    public int getWidth() {
-        return 0;
-    }
-
-    @Override
-    public int getHeight() {
-        return 0;
     }
 }

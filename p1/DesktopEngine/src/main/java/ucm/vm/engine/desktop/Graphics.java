@@ -15,36 +15,6 @@ public class Graphics extends AbstractGraphics {
     JFrame jFrame;
     Graphics2D g2D;
 
-    /**
-     * Pinta ....
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     */
-    @Override
-    public void drawLine(float x1, float y1, float x2, float y2) {
-        g2D.setColor(currentColor);
-        g2D.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
-    }
-
-    @Override
-    public void fillRect(float x1, float y1, float x2, float y2) {
-        g2D.setColor(currentColor);
-        g2D.fillRect((int) x1, (int) y1, (int) x2, (int) y2);
-    }
-
-    @Override
-    public void clear(int r, int g, int b) {
-        currentColor = new Color(r, g, b);
-        fillRect(0,0, getWidth(), getHeight());
-    }
-
-    @Override
-    public void setColor(int r, int g, int b) {
-        currentColor = new Color(r, g, b);
-    }
-
     @Override
     public void init(int width, int height, String windowName) {
         setWidth(width);
@@ -76,21 +46,60 @@ public class Graphics extends AbstractGraphics {
 
     }
 
+    /**
+     * Pinta ....
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    @Override
+    public void drawLine(float x1, float y1, float x2, float y2) {
+        g2D.setColor(currentColor);
+        g2D.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+    }
 
+    @Override
+    public void fillRect(float x1, float y1, float x2, float y2) {
+        g2D.setColor(currentColor);
+        g2D.fillRect((int) x1, (int) y1, (int) x2, (int) y2);
+    }
+
+    @Override
+    public void clear(int r, int g, int b) {
+        currentColor = new Color(r, g, b);
+        fillRect(0,0, getWidth(), getHeight());
+    }
+
+    @Override
+    public void setColor(int r, int g, int b) {
+        currentColor = new Color(r, g, b);
+    }
+
+    @Override
     public void run() {
         java.awt.image.BufferStrategy strategy = jFrame.getBufferStrategy();
+        long lastFrameTime = System.nanoTime();
 
-        do {
+        while (true) {
+            long currentTime = System.nanoTime();
+            long nanoElapsedTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+            double elapsedTime = (double) nanoElapsedTime / 1.0E9;
+
+            gameLogic.update(elapsedTime);
+
             do {
-                g2D = (Graphics2D) strategy.getDrawGraphics();
-                try {
-                    clear(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue());
-                }
-                finally {
-                    g2D.dispose();
-                }
-            } while(strategy.contentsRestored());
-            strategy.show();
-        } while(strategy.contentsLost());
+                do {
+                    g2D = (Graphics2D) strategy.getDrawGraphics();
+                    try {
+                        gameLogic.render();
+                    } finally {
+                        g2D.dispose();
+                    }
+                } while (strategy.contentsRestored());
+                strategy.show();
+            } while (strategy.contentsLost());
+        }
     }
 }

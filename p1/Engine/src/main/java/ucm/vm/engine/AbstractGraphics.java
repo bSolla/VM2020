@@ -1,9 +1,12 @@
 package ucm.vm.engine;
 
+import ucm.vm.generallogic.Logic;
+
 public abstract class AbstractGraphics implements ucm.vm.engine.Graphics {
     //region VARIABLES
-    int width = 0;
-    int height = 0;
+    protected int width = 0;
+    protected int height = 0;
+    protected Logic gameLogic;
     //endregion
 
     @Override
@@ -25,6 +28,9 @@ public abstract class AbstractGraphics implements ucm.vm.engine.Graphics {
     public void setHeight(int h) {
         height = h;
     }
+
+    @Override
+    public void setLogic(Logic logic) { gameLogic = logic;}
 
     public abstract void drawLine(float x1, float y1, float x2, float y2);
 
