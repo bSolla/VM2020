@@ -12,7 +12,7 @@ import android.view.SurfaceView;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MySurfaceView extends SurfaceView implements Runnable {
+public class MySurfaceView extends SurfaceView implements Runnable { // se tienen que separar
     Graphics graphicsEngine;
 
     Thread _renderThread;
@@ -42,6 +42,9 @@ public class MySurfaceView extends SurfaceView implements Runnable {
             } catch (Exception e) {
             }
         }
+
+        if (_sprite != null)
+            _imageWidht = _sprite.getWidth();
     } // MySurfaceView
 
     public void resume() {
@@ -102,15 +105,7 @@ public class MySurfaceView extends SurfaceView implements Runnable {
                 ;
             Canvas canvas = _holder.lockCanvas();
             render(canvas);
-            _holder.unlockCanvasAndPost(canvas);
-
-                /*
-                // Posibilidad: cedemos algo de tiempo. es una medida conflictiva...
-                try {
-                    Thread.sleep(1);
-                }
-                catch(Exception e) {}
-    			*/
+            _holder.unlockCanvasAndPost(canvas); // garantiza los 60fps y evita el sleep
         } // while
     } // run
 
