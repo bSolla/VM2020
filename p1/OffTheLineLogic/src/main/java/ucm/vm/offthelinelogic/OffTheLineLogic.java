@@ -3,6 +3,8 @@ package ucm.vm.offthelinelogic;
 import ucm.vm.engine.Graphics;
 import ucm.vm.generallogic.Logic;
 
+import org.json.simple.parser.JSONParser;
+
 public class OffTheLineLogic implements Logic {
     Graphics engine;
 
