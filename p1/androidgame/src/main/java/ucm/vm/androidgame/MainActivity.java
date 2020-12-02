@@ -1,55 +1,47 @@
 package ucm.vm.androidgame;
 
-import ucm.vm.engine.android.Graphics;
-import ucm.vm.engine.android.
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
-import java.io.IOException;
-import java.io.InputStream;
+import ucm.vm.engine.android.Graphics;
+import ucm.vm.engine.android.MySurfaceView;
+import ucm.vm.offthelinelogic.OffTheLineLogic;
 
 public class MainActivity extends AppCompatActivity {
+    MySurfaceView _renderView;
+    Graphics androidEngine;
+    OffTheLineLogic gameLogic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        InputStream inputStream = null;
-        AssetManager assetManager = this.getAssets();
 
-        try{
-            inputStream = assetManager.open("androidlogo.png");
-            _sprite = BitmapFactory.decodeStream(inputStream);
-            Activity a = this;
-        } catch (IOException e) {
-            android.util.Log.e("MainActivity", "Error leyendo el sprite");
-        } finally {
-            try {
-                inputStream.close();
-            } catch (Exception e) {
-            }
-        }
-        _myView = new MyView(this);
-        setContentView(_myView);
+        androidEngine = new Graphics();
+        gameLogic = new OffTheLineLogic();
+
+        gameLogic.init(androidEngine);
+        androidEngine.setLogic(gameLogic);
+
+        _renderView = new MySurfaceView(this, androidEngine);
+        setContentView(_renderView);
     }
-    MySurfaceView _myView;
 
-    /*protected void onResume() {
+    @Override
+    protected void onResume() {
+        // Avisamos a la vista (que es la encargada del active render)
+        // de lo que está pasando.
         super.onResume();
-        _myView.resume();
-    }
+        _renderView.resume();
 
+    } // onResume
+
+    @Override
     protected void onPause() {
+        // Avisamos a la vista (que es la encargada del active render)
+        // de lo que está pasando.
         super.onPause();
-        _myView.pause();
-    }*/
+        _renderView.pause();
 
-    Bitmap _sprite;
-
+    } // onPause
 }
