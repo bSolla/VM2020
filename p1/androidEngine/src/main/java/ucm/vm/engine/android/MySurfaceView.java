@@ -58,7 +58,6 @@ public class MySurfaceView extends SurfaceView implements Runnable {
             while (true) {
                 try {
                     _renderThread.join();
-                    _renderThread = null;
                     break;
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
@@ -97,13 +96,14 @@ public class MySurfaceView extends SurfaceView implements Runnable {
                 informePrevio = currentTime;
             }
             ++frames;
-
+            boolean check = _holder.getSurface().isValid();
             // Pintamos el frame
-            while (!_holder.getSurface().isValid()) {
-                Canvas canvas = _holder.lockCanvas();
-                render(canvas);
-                _holder.unlockCanvasAndPost(canvas);
-            }
+            while (!_holder.getSurface().isValid())
+                ;
+            Canvas canvas = _holder.lockCanvas();
+            render(canvas);
+            _holder.unlockCanvasAndPost(canvas);
+
                 /*
                 // Posibilidad: cedemos algo de tiempo. es una medida conflictiva...
                 try {
