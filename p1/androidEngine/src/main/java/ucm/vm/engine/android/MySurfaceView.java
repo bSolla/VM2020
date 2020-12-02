@@ -7,6 +7,14 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class MySurfaceView extends SurfaceView implements Runnable {
+    Graphics graphicsEngine;
+
+    Thread _renderThread;
+    SurfaceHolder _holder;
+
+    volatile boolean _running = false;
+
+    Paint _paint = new Paint();
 
     /**
      * Constructor.
@@ -14,9 +22,10 @@ public class MySurfaceView extends SurfaceView implements Runnable {
      * @param context Contexto en el que se integrará la vista
      *                (normalmente una actividad).
      */
-    public MySurfaceView(Context context) {
+    public MySurfaceView(Context context, Graphics engine) {
         super(context);
         _holder = getHolder();
+        graphicsEngine = engine;
     } // MySurfaceView
 
     //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,9 +107,10 @@ public class MySurfaceView extends SurfaceView implements Runnable {
         long informePrevio = lastFrameTime; // Informes de FPS
         int frames = 0;
 
+
         // Bucle principal.
         while(_running) {
-
+            graphicsEngine.run();
             long currentTime = System.nanoTime();
             long nanoElapsedTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
@@ -144,22 +154,7 @@ public class MySurfaceView extends SurfaceView implements Runnable {
      * anterior (frame anterior).
      */
     protected void update(double deltaTime) {
-        int maxX = getWidth() - 600; // 600 : longitud estimada en píxeles del rótulo
 
-        _x += _incX * deltaTime;
-        while(_x < 0 || _x > maxX) {
-            // Vamos a pintar fuera de la pantalla. Rectificamos.
-            if (_x < 0) {
-                // Nos salimos por la izquierda. Rebotamos.
-                _x = -_x;
-                _incX *= -1;
-            }
-            else if (_x > maxX) {
-                // Nos salimos por la derecha. Rebotamos
-                _x = 2*maxX - _x;
-                _incX *= -1;
-            }
-        } // while
 
     } // update
 
@@ -181,51 +176,5 @@ public class MySurfaceView extends SurfaceView implements Runnable {
 //        } // if (_sprite != null)
 
     } // render
-
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    //        Atributos protegidos/privados (de MySurfaceView)
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    /**
-     * Posición x actual del texto (lado izquierdo). Es importante
-     * que sea un número real, para acumular cambios por debajo del píxel si
-     * la velocidad de actualización es mayor que la del desplazamiento.
-     */
-    protected double _x = 0;
-
-    /**
-     * Velocidad de desplazamiento en píxeles por segundo. La sensación de
-     * velocidad percibida por el usuario dependerá de la densidad de
-     * pantalla (número de píxeles por pulgada).
-     */
-    int _incX = 50;
-
-    /**
-     * Objeto Thread que está ejecutando el método run() en una hebra
-     * diferente. Cuando se pide a la vista que se detenga el active
-     * rendering, se espera a que la hebra termine.
-     */
-    Thread _renderThread;
-
-    /**
-     * Manejador de la superficie para poder acceder a su contenido.
-     */
-    SurfaceHolder _holder;
-
-    /**
-     * Bandera que indica si está o no en marcha la hebra de
-     * active rendering, y que se utiliza para sincronización.
-     * Es importante que el campo sea volatile.
-     *
-     * Java proporciona un mecanismo integrado para solicitar la
-     * detencción de una hebra, aunque por simplicidad nosotros
-     * motamos el nuestro propio.
-     */
-    volatile boolean _running = false;
-
-    /**
-     * Objeto con la configuración gráfica usada para pintar el texto.
-     */
-    Paint _paint = new Paint();
 
 } // class MySurfaceView

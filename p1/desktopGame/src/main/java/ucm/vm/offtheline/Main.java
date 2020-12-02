@@ -12,6 +12,7 @@ public class Main {
         OffTheLineLogic gameLogic = new OffTheLineLogic();
 
         gameLogic.init(desktopEngine);
+
         desktopEngine.setLogic(gameLogic);
         desktopEngine.init(640, 480, "test");
         desktopEngine.run();
