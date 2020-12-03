@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -12,8 +13,10 @@ import android.view.SurfaceView;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ucm.vm.generallogic.Logic;
+
 public class MySurfaceView extends SurfaceView implements Runnable { // se tienen que separar
-    Graphics graphicsEngine;
+    Logic logic;
 
     Thread _renderThread;
     SurfaceHolder _holder;
@@ -23,11 +26,14 @@ public class MySurfaceView extends SurfaceView implements Runnable { // se tiene
     volatile boolean _running = false;
 
     Paint _paint = new Paint();
+    Canvas canvas;
 
-    public MySurfaceView(Context context, Graphics engine) {
+    int currentColor;
+
+    public MySurfaceView(Context context, Logic l) {
         super(context);
+        logic = l;
         _holder = getHolder();
-        graphicsEngine = engine;
 
         InputStream inputStream = null;
         AssetManager assetManager = context.getAssets();
@@ -71,7 +77,6 @@ public class MySurfaceView extends SurfaceView implements Runnable { // se tiene
 
     @Override
     public void run() {
-
         if (_renderThread != Thread.currentThread()) {
             throw new RuntimeException("run() should not be called directly");
         }
@@ -86,12 +91,13 @@ public class MySurfaceView extends SurfaceView implements Runnable { // se tiene
 
         // Bucle principal.
         while(_running) {
-            graphicsEngine.run();
             long currentTime = System.nanoTime();
             long nanoElapsedTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
             double delta = (double) nanoElapsedTime / 1.0E9;
-            update(delta);
+            //update(delta);
+            logic.update(delta);
+
             // Informe de FPS
             if (currentTime - informePrevio > 1000000000l) {
                 long fps = frames * 1000000000l / (currentTime - informePrevio);
@@ -104,8 +110,9 @@ public class MySurfaceView extends SurfaceView implements Runnable { // se tiene
             // Pintamos el frame
             while (!_holder.getSurface().isValid())
                 ;
-            Canvas canvas = _holder.lockCanvas();
-            render(canvas);
+            canvas = _holder.lockCanvas();
+            //render(canvas);
+            logic.render();
             _holder.unlockCanvasAndPost(canvas); // garantiza los 60fps y evita el sleep
         } // while
     } // run
@@ -122,12 +129,31 @@ public class MySurfaceView extends SurfaceView implements Runnable { // se tiene
         }
     } // update
 
-    protected void render(Canvas c) {
+    /*protected void render(Canvas c) {
         c.drawColor(0xFF0000FF); // ARGB
         if (_sprite != null) {
             c.drawBitmap(_sprite, (int)_x, 100, null);
         } // if (_sprite != null)
-    } // render
+    } // render*/
+
+    public void fillRect(float x1, float y1, float x2, float y2) {
+        _paint.setColor(currentColor);
+        canvas.drawRect(x1, y1, x2, y2, _paint);
+    }
+
+    public void clear(int c) {
+        currentColor = c;
+        fillRect(0, 0, getWidth(), getHeight());
+    }
+
+    public void drawLine(float x1, float y1, float x2, float y2) {
+        _paint.setColor(currentColor);
+        canvas.drawLine(x1, y1, x2, y2, _paint);
+    }
+
+    public void setColor(int c) {
+        currentColor = c;
+    }
 
     double _x = 0;
     int _incX = 50;

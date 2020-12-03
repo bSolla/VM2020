@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
         gameLogic.init(androidEngine);
         androidEngine.setLogic(gameLogic);
 
-        _renderView = new MySurfaceView(this, androidEngine);
+        _renderView = new MySurfaceView(this, gameLogic);
+        androidEngine.setSurfaceView(_renderView);
         setContentView(_renderView);
     }
 
